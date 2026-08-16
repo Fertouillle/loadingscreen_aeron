@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flotte Aeron — Chargement</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Fond plein écran : screenshots en rotation (fondu opacity uniquement, léger) -->
+  <div class="bg-slides" id="bg-slides"></div>
+  <div class="bg-scrim"></div>
+
+  <!-- Haut gauche : joueur -->
+  <div class="hud hud-player">
+    <div class="avatar" id="player-avatar">
+      <svg viewBox="0 0 24 24" class="avatar-fallback"><path fill="currentColor" d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.2-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.8-3.6-5-8-5Z"/></svg>
+    </div>
+    <span class="player-name" id="player-name">Connexion…</span>
+  </div>
+
+  <!-- Haut droite : carte du serveur -->
+  <div class="hud hud-map">
+    <span class="hud-label">Carte</span>
+    <span class="hud-value" id="map-name">—</span>
+  </div>
+
+  <!-- Centre : identité + progression -->
+  <main class="center-stack">
+    <img class="logo" src="assets/img/logo.png" alt="Aeron">
+    <h1 class="brand-title">Flotte Aeron</h1>
+    <span class="brand-sub">Clone Wars Roleplay</span>
+
+    <div class="loading-block">
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="loading-row">
+        <span class="loading-label" id="loading-status">Initialisation…</span>
+        <span class="loading-percent"><span id="percent-value">0</span>%</span>
+      </div>
+    </div>
+
+    <p class="tip-text" id="tip-text">Chargement des données de la flotte…</p>
+  </main>
+
+  <!-- Bas gauche : liens (non cliquables, informatif) -->
+  <div class="hud hud-links">
+    <span class="link-tag" id="link-discord">discord.gg/aeron</span>
+    <span class="link-tag" id="link-web">flotte-aeron.net</span>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
