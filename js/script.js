@@ -13,15 +13,10 @@
     discordTag: "discord.gg/aeron",
     websiteTag: "flotte-aeron.net",
 
-    // Dépose tes images dans assets/img/backgrounds/ et liste-les ici.
-    // Elles tournent en fondu (opacity uniquement, pas de zoom/filtre
-    // animé) pour rester léger même en plein écran.
-    backgrounds: [
-      "assets/img/backgrounds/1.jpg",
-      "assets/img/backgrounds/2.jpg",
-      "assets/img/backgrounds/3.jpg",
-      "assets/img/backgrounds/4.jpg",
-    ],
+    // La liste des images de fond est dans index.html (balises <img
+    // class="bg-slide">), pas ici : ça garantit que la première image
+    // s'affiche même si le JS ne tourne pas. Pour changer les images,
+    // ajoute/retire des <img> dans index.html.
     backgroundIntervalMs: 7000,
 
     // Optionnel : endpoint HTTP (ton propre site) qui retourne
@@ -66,37 +61,21 @@
   document.getElementById("link-web").textContent = CONFIG.websiteTag;
 
   /* ---------------- rotating full-screen background ---------------- */
+  /* Les <img> existent déjà dans le HTML (voir index.html) : la première
+     a la classe "is-active" en dur, donc elle s'affiche même sans JS.
+     Ce script se contente de faire tourner la classe entre elles.       */
 
-  const bgContainer = document.getElementById("bg-slides");
-  let bgSlides = [];
-  let bgIndex = -1;
-
-  function buildBackgrounds() {
-    CONFIG.backgrounds.forEach((src) => {
-      const slide = document.createElement("div");
-      slide.className = "bg-slide";
-      slide.style.backgroundImage = `url("${src}")`;
-
-      const probe = new Image();
-      probe.onerror = () => { slide.dataset.broken = "true"; };
-      probe.src = src;
-
-      bgContainer.appendChild(slide);
-      bgSlides.push(slide);
-    });
-  }
+  const bgSlides = Array.from(document.querySelectorAll(".bg-slide"));
+  let bgIndex = 0;
 
   function nextBackground() {
-    const usable = bgSlides.filter((s) => s.dataset.broken !== "true");
-    if (usable.length === 0) return;
-    usable.forEach((s) => s.classList.remove("is-active"));
-    bgIndex = (bgIndex + 1) % usable.length;
-    usable[bgIndex].classList.add("is-active");
+    if (bgSlides.length < 2) return;
+    bgSlides[bgIndex].classList.remove("is-active");
+    bgIndex = (bgIndex + 1) % bgSlides.length;
+    bgSlides[bgIndex].classList.add("is-active");
   }
 
-  if (CONFIG.backgrounds.length) {
-    buildBackgrounds();
-    setTimeout(nextBackground, 50);
+  if (bgSlides.length > 1) {
     setInterval(nextBackground, CONFIG.backgroundIntervalMs);
   }
 
@@ -170,18 +149,26 @@
     usingRealData = true;
   };
 
+  let identityReceived = false;
+
   // GameDetails(servername, serverurl, mapname, maxplayers, steamid, gamemode)
   window.GameDetails = function (servername, serverurl, mapname, maxplayers, steamid, gamemode) {
+    identityReceived = true;
     if (mapname) mapEl.textContent = mapname;
     if (steamid) loadSteamProfile(steamid);
   };
 
   /* ---------------- browser preview simulation ---------------- */
-  /* Ne tourne que si le moteur GMod n'appelle jamais les hooks ci-dessus
-     (c'est-à-dire quand on prévisualise ce fichier dans un navigateur). */
+  /* Ne s'applique que si le moteur GMod n'a pas appelé GameDetails
+     après un court délai (c'est-à-dire quand on prévisualise ce
+     fichier dans un navigateur, hors du jeu).                      */
 
-  mapEl.textContent = "rp_venator_aeron_v3";
-  nameEl.textContent = "Ferty";
+  setTimeout(() => {
+    if (!identityReceived) {
+      mapEl.textContent = "rp_venator_aeron_v3";
+      nameEl.textContent = "Ferty (aperçu)";
+    }
+  }, 500);
 
   const DEMO_TOTAL = 340;
   let demoCurrent = 0;

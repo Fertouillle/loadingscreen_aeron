@@ -8,8 +8,15 @@
 </head>
 <body>
 
-  <!-- Fond plein écran : screenshots en rotation (fondu opacity uniquement, léger) -->
-  <div class="bg-slides" id="bg-slides"></div>
+  <!-- Fond plein écran : screenshots en rotation (fondu opacity uniquement, léger).
+       Les <img> sont en dur dans le HTML (pas créées en JS) pour que la première
+       image s'affiche même si le moteur de rendu du jeu a un souci avec le JS. -->
+  <div class="bg-slides" id="bg-slides">
+    <img class="bg-slide is-active" src="assets/img/backgrounds/1.jpg" alt="">
+    <img class="bg-slide" src="assets/img/backgrounds/2.jpg" alt="">
+    <img class="bg-slide" src="assets/img/backgrounds/3.jpg" alt="">
+    <img class="bg-slide" src="assets/img/backgrounds/4.jpg" alt="">
+  </div>
   <div class="bg-scrim"></div>
 
   <!-- Haut gauche : joueur -->
