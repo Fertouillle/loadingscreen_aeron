@@ -19,12 +19,13 @@
   </div>
   <div class="bg-scrim"></div>
 
-  <!-- Haut gauche : joueur -->
-  <div class="hud hud-player">
-    <div class="avatar" id="player-avatar">
-      <svg viewBox="0 0 24 24" class="avatar-fallback"><path fill="currentColor" d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.4 0-8 2.2-8 5v1a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1c0-2.8-3.6-5-8-5Z"/></svg>
+  <!-- Haut gauche : serveur (nom transmis par GMod, aucune dépendance externe) -->
+  <div class="hud hud-server">
+    <span class="status-dot"></span>
+    <div class="hud-server-text">
+      <span class="hud-label">Serveur</span>
+      <span class="hud-value" id="server-name">Flotte Aeron</span>
     </div>
-    <span class="player-name" id="player-name">Connexion…</span>
   </div>
 
   <!-- Haut droite : carte du serveur -->

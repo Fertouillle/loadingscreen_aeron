@@ -19,14 +19,6 @@
     // ajoute/retire des <img> dans index.html.
     backgroundIntervalMs: 7000,
 
-    // Optionnel : endpoint HTTP (ton propre site) qui retourne
-    // { "name": "...", "avatar": "https://..." } pour un steamid64 donné.
-    // Nécessaire car Steam exige une clé API côté serveur pour récupérer
-    // pseudo/avatar — impossible de le faire en JS pur côté client sans
-    // exposer ta clé. Laisse vide pour garder le fallback générique.
-    // Exemple d'URL appelée : `${steamProfileEndpoint}?steamid=76561198...`
-    steamProfileEndpoint: "",
-
     tips: [
       "Utilisez /calc pour ouvrir la calculatrice holographique.",
       "Chaque faction dispose de sa propre hiérarchie et de ses propres missions.",
@@ -79,31 +71,9 @@
     setInterval(nextBackground, CONFIG.backgroundIntervalMs);
   }
 
-  /* ---------------- player identity (top-left) ---------------- */
+  /* ---------------- server name (top-left) ---------------- */
 
-  const avatarEl = document.getElementById("player-avatar");
-  const nameEl = document.getElementById("player-name");
-
-  function setPlayerAvatar(url) {
-    if (!url) return;
-    const img = document.createElement("img");
-    img.src = url;
-    img.alt = "";
-    avatarEl.innerHTML = "";
-    avatarEl.appendChild(img);
-  }
-
-  function loadSteamProfile(steamid64) {
-    if (!CONFIG.steamProfileEndpoint || !steamid64) return;
-    fetch(`${CONFIG.steamProfileEndpoint}?steamid=${encodeURIComponent(steamid64)}`)
-      .then((r) => r.ok ? r.json() : null)
-      .then((data) => {
-        if (!data) return;
-        if (data.name) nameEl.textContent = data.name;
-        if (data.avatar) setPlayerAvatar(data.avatar);
-      })
-      .catch(() => {});
-  }
+  const serverNameEl = document.getElementById("server-name");
 
   /* ---------------- map (top-right) ---------------- */
 
@@ -155,7 +125,7 @@
   window.GameDetails = function (servername, serverurl, mapname, maxplayers, steamid, gamemode) {
     identityReceived = true;
     if (mapname) mapEl.textContent = mapname;
-    if (steamid) loadSteamProfile(steamid);
+    if (servername) serverNameEl.textContent = servername;
   };
 
   /* ---------------- browser preview simulation ---------------- */
@@ -166,7 +136,7 @@
   setTimeout(() => {
     if (!identityReceived) {
       mapEl.textContent = "rp_venator_aeron_v3";
-      nameEl.textContent = "Ferty (aperçu)";
+      serverNameEl.textContent = "Flotte Aeron (aperçu)";
     }
   }, 500);
 

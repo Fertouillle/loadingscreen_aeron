@@ -92,41 +92,31 @@ html, body {
   -webkit-backdrop-filter: blur(14px);
 }
 
-.hud-player {
+.hud-server {
   top: 28px;
   left: 28px;
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
 }
 
-.avatar {
-  width: 34px;
-  height: 34px;
+.status-dot {
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  overflow: hidden;
-  background: -webkit-linear-gradient(135deg, var(--accent-a), var(--accent-b));
-  background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #4fe08a;
+  -webkit-box-shadow: 0 0 8px #4fe08a;
+  box-shadow: 0 0 8px #4fe08a;
   flex-shrink: 0;
 }
 
-.avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.hud-server-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.avatar-fallback {
-  width: 20px;
-  height: 20px;
-  color: rgba(255,255,255,0.85);
-}
-
-.player-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  max-width: 220px;
+.hud-server-text .hud-value {
+  max-width: 240px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
