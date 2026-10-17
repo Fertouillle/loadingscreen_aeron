@@ -20,11 +20,8 @@
     backgroundIntervalMs: 7000,
 
     tips: [
-      "Utilisez /calc pour ouvrir la calculatrice holographique.",
-      "Chaque faction dispose de sa propre hiérarchie et de ses propres missions.",
       "Le respect du RP et des ordres hiérarchiques est obligatoire sur Aeron.",
       "Rejoignez notre Discord pour suivre les événements de la flotte.",
-      "Les clones peuvent personnaliser leur armure une fois promus.",
       "Un doute en jeu ? Un Staff est toujours disponible en support.",
     ],
   };
