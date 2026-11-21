@@ -2,63 +2,42 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flotte Aeron — Chargement</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- Fond plein écran : screenshots en rotation (fondu opacity uniquement, léger).
-       Les <img> sont en dur dans le HTML (pas créées en JS) pour que la première
-       image s'affiche même si le moteur de rendu du jeu a un souci avec le JS. -->
-  <div class="bg-slides" id="bg-slides">
-    <img class="bg-slide is-active" src="assets/img/backgrounds/1.jpg" alt="">
-    <img class="bg-slide" src="assets/img/backgrounds/2.jpg" alt="">
-    <img class="bg-slide" src="assets/img/backgrounds/3.jpg" alt="">
-    <img class="bg-slide" src="assets/img/backgrounds/4.jpg" alt="">
+  <!-- images en dur : la première s'affiche même si le JS ne tourne pas -->
+  <div class="bg">
+    <img class="on" src="assets/img/backgrounds/1.jpg" alt="">
+    <img src="assets/img/backgrounds/2.jpg" alt="">
+    <img src="assets/img/backgrounds/3.jpg" alt="">
+    <img src="assets/img/backgrounds/4.jpg" alt="">
   </div>
-  <div class="bg-scrim"></div>
+  <div class="shade"></div>
 
-  <!-- Haut gauche : serveur (nom transmis par GMod, aucune dépendance externe) -->
-  <div class="hud hud-server">
-    <span class="status-dot"></span>
-    <div class="hud-server-text">
-      <span class="hud-label">Serveur</span>
-      <span class="hud-value" id="server-name">Flotte Aeron</span>
-    </div>
-  </div>
+  <div class="map"><b id="map">—</b> &nbsp;·&nbsp; <span id="discord"></span></div>
 
-  <!-- Haut droite : carte du serveur -->
-  <div class="hud hud-map">
-    <span class="hud-label">Carte</span>
-    <span class="hud-value" id="map-name">—</span>
-  </div>
-
-  <!-- Centre : identité + progression -->
-  <main class="center-stack">
-    <img class="logo" src="assets/img/logo.png" alt="Aeron">
-    <h1 class="brand-title">Flotte Aeron</h1>
-    <span class="brand-sub">Clone Wars Roleplay</span>
-
-    <div class="loading-block">
-      <div class="progress-track">
-        <div class="progress-fill" id="progress-fill"></div>
-      </div>
-      <div class="loading-row">
-        <span class="loading-label" id="loading-status">Initialisation…</span>
-        <span class="loading-percent"><span id="percent-value">0</span>%</span>
+  <!-- tout est à gauche : GMod pose son propre encadré en bas à droite -->
+  <div class="main">
+    <div class="mark">
+      <img src="assets/img/logo.png" alt="">
+      <div>
+        <h1>Flotte Aeron</h1>
+        <div class="server"><span id="server">[FR] CloneWars - Aeron</span></div>
       </div>
     </div>
 
-    <p class="tip-text" id="tip-text">Chargement des données de la flotte…</p>
-  </main>
+    <p class="tip" id="tip"></p>
 
-  <!-- Bas gauche : liens (non cliquables, informatif) -->
-  <div class="hud hud-links">
-    <span class="link-tag" id="link-discord">discord.gg/Ym5dPXkBTW</span>
-    <span class="link-tag" id="link-web">###</span>
+    <div class="load">
+      <span><span id="step">Connexion au serveur</span><span id="file"></span></span>
+      <span><span id="count"></span> &nbsp; <span class="pct" id="pct">0 %</span></span>
+    </div>
+    <div class="bar"><i id="fill"></i></div>
   </div>
 
-  <script src="js/script.js"></script>
+  <script src="config.js"></script>
+  <script src="js/loading.js"></script>
 </body>
 </html>

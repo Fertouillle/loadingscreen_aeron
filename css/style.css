@@ -1,288 +1,82 @@
-/* ============================================================
-   Flotte Aeron — Loading Screen (plein écran, artistique, léger)
-   ============================================================ */
+/* Écran de chargement — Flotte Aeron
+   Navigateur de GMod = vieux Chromium : pas de inset, pas de min()/clamp(),
+   pas de backdrop-filter, pas de filter. */
 
 :root {
-  --accent-a: #8b6bff;   /* violet */
-  --accent-b: #4fd2ff;   /* cyan */
-  --accent-c: #ff7fb0;   /* rose */
-
-  --glass: rgba(20, 14, 38, 0.42);
-  --glass-strong: rgba(20, 14, 38, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.18);
-  --text: #f5f3ff;
-  --text-dim: #d9d3f2;
-  --text-faint: #b3a9d9;
-
-  --radius-lg: 28px;
-  --radius-md: 16px;
-  --radius-pill: 999px;
-
-  --font: "Segoe UI", "Poppins", "Bahnschrift", Arial, sans-serif;
+  --acc: #6cb8ff;
+  --txt: #f2f4f7;
+  --dim: rgba(242, 244, 247, 0.62);
+  --gap: 64px;
+  --cond: "Bahnschrift SemiBold Condensed", "Bahnschrift", "Arial Narrow", "Segoe UI", sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: var(--font);
-  color: var(--text);
-  background: #1a1230; /* fallback tant que les images ne sont pas chargées */
+  width: 100%; height: 100%; overflow: hidden;
+  background: #05080d; color: var(--txt);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-/* ---------- background: full-bleed rotating screenshots ---------- */
-/* Fondu en opacity uniquement (pas de zoom/filtre animé) : léger. */
+/* ---------- fond ---------- */
+.bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; }
+.bg img {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0;
+  -webkit-transition: opacity 2s ease-in-out; transition: opacity 2s ease-in-out;
+}
+.bg img.on { opacity: 1; }
 
-/* NB : pas de raccourci CSS "inset" (top/left/right/bottom explicites) —
-   le navigateur embarqué par GMod (vieux Chromium/CEF) ne le supporte pas
-   et ignore la règle, ce qui effondre l'élément à une taille nulle. */
-
-.bg-slides {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 0;
-  overflow: hidden;
+.shade {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: -webkit-linear-gradient(top, rgba(5,8,13,.5) 0%, rgba(5,8,13,0) 16%, rgba(5,8,13,0) 50%, rgba(5,8,13,.85) 82%, rgba(5,8,13,.95) 100%);
+  background: linear-gradient(180deg, rgba(5,8,13,.5) 0%, rgba(5,8,13,0) 16%, rgba(5,8,13,0) 50%, rgba(5,8,13,.85) 82%, rgba(5,8,13,.95) 100%);
 }
 
-.bg-slide {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  opacity: 0;
-  -webkit-transition: opacity 1.6s ease;
-  transition: opacity 1.6s ease;
+/* ---------- coin haut droit : carte, discrète ---------- */
+.map {
+  position: fixed; top: 36px; right: var(--gap);
+  text-align: right; font-size: 13px; color: var(--dim);
+  text-shadow: 0 1px 3px rgba(0,0,0,.6);
 }
+.map b { color: var(--txt); font-weight: 600; }
 
-.bg-slide.is-active {
-  opacity: 1;
-}
+/* ---------- tout à gauche : GMod affiche son propre encadré en bas à droite ---------- */
+.main { position: fixed; left: var(--gap); bottom: 56px; width: 820px; }
 
-/* Voile colorimétrique statique (pas animé) pour la lisibilité + cohérence */
-.bg-scrim {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    -webkit-radial-gradient(ellipse at 50% 45%, rgba(20,14,38,0.15) 0%, rgba(15,10,30,0.55) 70%),
-    -webkit-linear-gradient(160deg, rgba(139,107,255,0.18), rgba(79,210,255,0.08) 45%, rgba(15,10,30,0.35) 100%);
-  background:
-    radial-gradient(ellipse at 50% 45%, rgba(20,14,38,0.15) 0%, rgba(15,10,30,0.55) 70%),
-    linear-gradient(160deg, rgba(139,107,255,0.18), rgba(79,210,255,0.08) 45%, rgba(15,10,30,0.35) 100%);
-}
-
-/* ---------- HUD corner elements ---------- */
-
-.hud {
-  position: fixed;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  border-radius: var(--radius-pill);
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.hud-server {
-  top: 28px;
-  left: 28px;
-  border-radius: var(--radius-md);
-  padding: 10px 18px;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #4fe08a;
-  -webkit-box-shadow: 0 0 8px #4fe08a;
-  box-shadow: 0 0 8px #4fe08a;
-  flex-shrink: 0;
-}
-
-.hud-server-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.hud-server-text .hud-value {
-  max-width: 240px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.hud-map {
-  top: 28px;
-  right: 28px;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  border-radius: var(--radius-md);
-  padding: 10px 18px;
-}
-
-.hud-label {
-  font-size: 10px;
-  letter-spacing: 0.14em;
+.mark { display: flex; align-items: center; gap: 28px; }
+.mark img { width: 150px; height: auto; }
+.mark h1 {
+  font-family: var(--cond); font-weight: 600;
+  font-size: 96px; line-height: .9; letter-spacing: .01em; white-space: nowrap;
   text-transform: uppercase;
-  color: var(--text-faint);
-  font-weight: 600;
+}
+.mark .server { font-size: 18px; white-space: nowrap; color: var(--dim); margin-top: 8px; }
+
+.tip {
+  margin-top: 30px; max-width: 640px; min-height: 48px;
+  font-size: 16px; line-height: 1.55; color: var(--dim);
+  -webkit-transition: opacity .4s ease; transition: opacity .4s ease;
 }
 
-.hud-value {
-  font-size: 13.5px;
-  font-weight: 700;
-  color: var(--text);
-  font-family: "Consolas", "SFMono-Regular", monospace;
+.load {
+  margin-top: 26px;
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 13px; color: var(--dim);
+}
+.load #step { color: var(--txt); font-weight: 600; margin-right: 14px; }
+.load #file { white-space: nowrap; }
+.load .pct { font-family: var(--cond); font-size: 18px; color: var(--txt); }
+
+.bar { position: relative; margin-top: 10px; height: 3px; background: rgba(255,255,255,.12); }
+.bar i {
+  position: absolute; top: 0; left: 0; bottom: 0; width: 0; background: var(--acc);
+  -webkit-transition: width .6s ease-out; transition: width .6s ease-out;
 }
 
-.hud-links {
-  bottom: 28px;
-  left: 28px;
-  border-radius: var(--radius-pill);
-  gap: 8px;
-}
-
-.link-tag {
-  padding: 4px 4px;
-  font-size: 12px;
-  color: var(--text-dim);
-}
-
-.hud-links .link-tag:not(:last-child) {
-  border-right: 1px solid var(--glass-border);
-  padding-right: 12px;
-}
-.hud-links .link-tag:not(:first-child) {
-  padding-left: 4px;
-}
-
-/* ---------- center stack ---------- */
-
-.center-stack {
-  position: fixed;
-  z-index: 2;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  width: min(520px, 90vw);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 6px;
-  padding: 44px 40px 36px;
-  border-radius: var(--radius-lg);
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  -webkit-box-shadow: 0 30px 80px rgba(10, 6, 22, 0.45);
-  box-shadow: 0 30px 80px rgba(10, 6, 22, 0.45);
-}
-
-.logo {
-  width: 56px;
-  height: auto;
-  margin-bottom: 14px;
-  -webkit-filter: drop-shadow(0 4px 18px rgba(139, 107, 255, 0.5));
-  filter: drop-shadow(0 4px 18px rgba(139, 107, 255, 0.5));
-}
-
-.brand-title {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  background: -webkit-linear-gradient(90deg, #ffffff, var(--accent-b));
-  background: linear-gradient(90deg, #ffffff, var(--accent-b));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.brand-sub {
-  font-size: 13px;
-  color: var(--text-dim);
-  margin-bottom: 28px;
-}
-
-/* ---------- loading block ---------- */
-
-.loading-block {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.progress-track {
-  position: relative;
-  width: 100%;
-  height: 10px;
-  border-radius: var(--radius-pill);
-  background: rgba(255, 255, 255, 0.14);
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  width: 0%;
-  border-radius: var(--radius-pill);
-  background: -webkit-linear-gradient(left, var(--accent-a), var(--accent-b));
-  background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
-  -webkit-box-shadow: 0 0 16px rgba(139, 107, 255, 0.6);
-  box-shadow: 0 0 16px rgba(139, 107, 255, 0.6);
-  -webkit-transition: width 0.4s ease-out;
-  transition: width 0.4s ease-out;
-}
-
-.loading-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.loading-label {
-  font-size: 12.5px;
-  color: var(--text-dim);
-  font-weight: 600;
-}
-
-.loading-percent {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent-b);
-  font-variant-numeric: tabular-nums;
-}
-
-/* ---------- tip ---------- */
-
-.tip-text {
-  margin-top: 22px;
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--text-faint);
-  min-height: 40px;
-  -webkit-transition: opacity 0.25s ease;
-  transition: opacity 0.25s ease;
-}
-
-/* ---------- responsive ---------- */
-
-@media (max-width: 640px) {
-  .hud-player, .hud-map { padding: 8px 12px; }
-  .center-stack { padding: 32px 24px 28px; }
-  .brand-title { font-size: 26px; }
+@media (max-width: 1500px) {
+  :root { --gap: 44px; }
+  .main { width: 680px; }
+  .mark img { width: 122px; }
+  .mark h1 { font-size: 78px; }
 }

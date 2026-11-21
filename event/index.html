@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Flotte Aeron — Event</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <!-- images en dur : la première s'affiche même si le JS ne tourne pas -->
+  <div class="bg">
+    <img class="on" src="../assets/img/backgrounds/4.jpg" alt="">
+    <img src="../assets/img/backgrounds/3.jpg" alt="">
+    <img src="../assets/img/backgrounds/1.jpg" alt="">
+    <img src="../assets/img/backgrounds/2.jpg" alt="">
+  </div>
+  <div class="shade"></div>
+
+  <div class="map"><b id="map">—</b> &nbsp;·&nbsp; <span id="discord"></span></div>
+
+  <!-- tout est à gauche : GMod pose son propre encadré en bas à droite -->
+  <div class="main">
+    <div class="mark">
+      <img src="../assets/img/logo.png" alt="">
+      <div>
+        <h1>Flotte Aeron</h1>
+        <div class="server"><span id="server">[FR] CloneWars - Aeron | EVENT</span></div>
+      </div>
+    </div>
+
+    <p class="tip" id="tip"></p>
+
+    <div class="load">
+      <span><span id="step">Connexion au serveur</span><span id="file"></span></span>
+      <span><span id="count"></span> &nbsp; <span class="pct" id="pct">0 %</span></span>
+    </div>
+    <div class="bar"><i id="fill"></i></div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="../js/loading.js"></script>
+</body>
+</html>
